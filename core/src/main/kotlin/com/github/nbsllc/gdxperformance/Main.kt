@@ -92,7 +92,6 @@ class Main : ApplicationAdapter() {
     }
 
     override fun dispose() {
-        println("dispose called!")
         shapeRenderer.dispose()
         batch.dispose()
         font.dispose()
