@@ -21,31 +21,36 @@ class Main : ApplicationAdapter() {
     private lateinit var batch: SpriteBatch
 
     override fun create() {
-        camera = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
-        camera.position.set(Gdx.graphics.width / 2f, Gdx.graphics.height / 2f, 0f)
+        val width = Gdx.graphics.width
+        val height = Gdx.graphics.height
+
+        camera = OrthographicCamera(width.toFloat(), height.toFloat())
+        camera.position.set(width / 2f, height / 2f, 0f)
         camera.update()
 
         shapeRenderer = ShapeRenderer()
 
         polygon1 = Polygon(
             floatArrayOf(
+                0f, 0f,
+                100f, 0f,
                 100f, 100f,
-                200f, 150f,
-                150f, 250f,
-                50f, 200f
+                0f, 100f
             )
         )
-        polygon1.setPosition(100f, 100f)
+        polygon1.setOrigin(50f, 50f)
+        polygon1.setPosition(width / 2f, height / 2f)
 
         polygon2 = Polygon(
             floatArrayOf(
-                300f, 300f,
-                400f, 350f,
-                350f, 450f,
-                250f, 400f
+                0f, 0f,
+                100f, 0f,
+                100f, 100f,
+                0f, 100f
             )
         )
-        polygon2.setPosition(200f, 200f)
+        polygon2.setOrigin(50f, 50f)
+        polygon2.setPosition(width / 2f + 200f, height / 2f + 200f)
 
         font = BitmapFont()
         batch = SpriteBatch()
@@ -73,6 +78,11 @@ class Main : ApplicationAdapter() {
         }
 
         shapeRenderer.end()
+
+        // Rotate polygon1
+        val deltaTime = Gdx.graphics.deltaTime
+        polygon1.rotation += 90f * deltaTime
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
 
         // Render polygons
