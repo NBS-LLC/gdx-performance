@@ -39,7 +39,7 @@ class Main : ApplicationAdapter() {
             )
         )
         polygon1.setOrigin(50f, 50f)
-        polygon1.setPosition(width / 2f, height / 2f)
+        polygon1.setPosition(width / 2f - 50f, height / 2f - 50f)
 
         polygon2 = Polygon(
             floatArrayOf(
