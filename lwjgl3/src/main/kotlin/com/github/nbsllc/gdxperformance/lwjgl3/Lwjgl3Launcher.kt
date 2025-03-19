@@ -18,7 +18,6 @@ fun main() {
     var selectedMode: Graphics.DisplayMode? = null
 
     for (mode in Lwjgl3ApplicationConfiguration.getDisplayModes()) {
-        println(mode)
         if (mode.width == desiredWith && mode.height == desiredHeight && mode.refreshRate == desiredRefreshRate) {
             selectedMode = mode
             break
