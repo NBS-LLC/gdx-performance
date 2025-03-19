@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Polygon
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ScreenUtils
 
 class Main : ApplicationAdapter() {
@@ -61,6 +62,8 @@ class Main : ApplicationAdapter() {
             Gdx.app.exit()
         }
 
+        val deltaTime = Gdx.graphics.deltaTime
+
         // Gradient background
         val width = Gdx.graphics.width.toFloat()
         val height = Gdx.graphics.height.toFloat()
@@ -80,8 +83,34 @@ class Main : ApplicationAdapter() {
         shapeRenderer.end()
 
         // Rotate polygon1
-        val deltaTime = Gdx.graphics.deltaTime
         polygon1.rotation += 90f * deltaTime
+
+        // Handle movement of polygon2
+        var polygon2x = polygon2.x
+        var polygon2y = polygon2.y
+        val velocity = Vector2()
+
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            velocity.x = -1f
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            velocity.x = 1f
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            velocity.y = 1f
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            velocity.y = -1f
+        }
+
+        // Should really use len2 for perf, but len looks smoother to me
+        if (velocity.len() > 0) {
+            velocity.nor()
+        }
+
+        polygon2x += velocity.x * 100f * deltaTime
+        polygon2y += velocity.y * 100f * deltaTime
+        polygon2.setPosition(polygon2x, polygon2y)
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
 
