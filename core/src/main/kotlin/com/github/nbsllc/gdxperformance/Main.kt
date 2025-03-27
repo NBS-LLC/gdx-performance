@@ -137,6 +137,14 @@ class Main : ApplicationAdapter() {
         batch.end()
     }
 
+    override fun resize(width: Int, height: Int) {
+        // Update your camera and other rendering-related variables here
+        camera.viewportWidth = width.toFloat()
+        camera.viewportHeight = height.toFloat()
+        camera.position.set(width / 2f, height / 2f, 0f)
+        camera.update()
+    }
+
     override fun dispose() {
         shapeRenderer.dispose()
         batch.dispose()
