@@ -17,9 +17,50 @@ class Main : ApplicationAdapter() {
     private lateinit var camera: OrthographicCamera
     private lateinit var shapeRenderer: ShapeRenderer
     private lateinit var polygon1: Polygon
-    private lateinit var polygon2: Polygon
+    private lateinit var player: Polygon
     private lateinit var font: BitmapFont
     private lateinit var batch: SpriteBatch
+
+    private fun createPlayer(x: Float, y: Float) {
+        player = Polygon(
+            floatArrayOf(
+                0f, 0f,
+                30f, 10f,
+                0f, 20f
+            )
+        )
+        player.setOrigin(15f, 10f)
+        player.setPosition(x, y)
+    }
+
+    private fun updatePlayer(deltaTime: Float) {
+        val speed = 250f
+        val velocity = Vector2()
+
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            velocity.x = -1f
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            velocity.x = 1f
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            velocity.y = 1f
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            velocity.y = -1f
+        }
+
+        // Should really use len2 for perf, but len looks smoother to me
+        if (velocity.len() > 0) {
+            velocity.nor()
+        }
+
+        var x = player.x
+        var y = player.y
+        x += velocity.x * speed * deltaTime
+        y += velocity.y * speed * deltaTime
+        player.setPosition(x, y)
+    }
 
     override fun create() {
         val width = Gdx.graphics.width
@@ -42,16 +83,7 @@ class Main : ApplicationAdapter() {
         polygon1.setOrigin(50f, 50f)
         polygon1.setPosition(width / 2f - 50f, height / 2f - 50f)
 
-        polygon2 = Polygon(
-            floatArrayOf(
-                0f, 0f,
-                100f, 0f,
-                100f, 100f,
-                0f, 100f
-            )
-        )
-        polygon2.setOrigin(50f, 50f)
-        polygon2.setPosition(width / 2f + 200f, height / 2f + 200f)
+        createPlayer(width / 6f, height / 1.5f)
 
         font = BitmapFont()
         batch = SpriteBatch()
@@ -85,32 +117,7 @@ class Main : ApplicationAdapter() {
         // Rotate polygon1
         polygon1.rotation += 90f * deltaTime
 
-        // Handle movement of polygon2
-        var polygon2x = polygon2.x
-        var polygon2y = polygon2.y
-        val velocity = Vector2()
-
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            velocity.x = -1f
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            velocity.x = 1f
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            velocity.y = 1f
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            velocity.y = -1f
-        }
-
-        // Should really use len2 for perf, but len looks smoother to me
-        if (velocity.len() > 0) {
-            velocity.nor()
-        }
-
-        polygon2x += velocity.x * 100f * deltaTime
-        polygon2y += velocity.y * 100f * deltaTime
-        polygon2.setPosition(polygon2x, polygon2y)
+        updatePlayer(deltaTime)
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
 
@@ -119,7 +126,7 @@ class Main : ApplicationAdapter() {
         shapeRenderer.polygon(polygon1.transformedVertices)
 
         shapeRenderer.color = Color.GRAY
-        shapeRenderer.polygon(polygon2.transformedVertices)
+        shapeRenderer.polygon(player.transformedVertices)
 
         shapeRenderer.end()
 
