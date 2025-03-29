@@ -30,7 +30,20 @@ class Main : ApplicationAdapter() {
             )
         )
         player.setOrigin(15f, 10f)
-        player.setPosition(x, y)
+        player.setPosition(x - 15f, y - 10f)
+    }
+
+    private fun createAnomaly(x: Float, y: Float) {
+        polygon1 = Polygon(
+            floatArrayOf(
+                0f, 0f,
+                100f, 0f,
+                100f, 100f,
+                0f, 100f
+            )
+        )
+        polygon1.setOrigin(50f, 50f)
+        polygon1.setPosition(x - 50f, y - 50f)
     }
 
     private fun updatePlayer(deltaTime: Float) {
@@ -72,17 +85,7 @@ class Main : ApplicationAdapter() {
 
         shapeRenderer = ShapeRenderer()
 
-        polygon1 = Polygon(
-            floatArrayOf(
-                0f, 0f,
-                100f, 0f,
-                100f, 100f,
-                0f, 100f
-            )
-        )
-        polygon1.setOrigin(50f, 50f)
-        polygon1.setPosition(width / 2f - 50f, height / 2f - 50f)
-
+        createAnomaly(width / 2f, height / 2f)
         createPlayer(width / 6f, height / 1.5f)
 
         font = BitmapFont()
