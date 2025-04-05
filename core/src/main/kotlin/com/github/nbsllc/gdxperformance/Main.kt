@@ -19,7 +19,7 @@ class Main : ApplicationAdapter() {
     private lateinit var camera: OrthographicCamera
     private lateinit var viewport: Viewport
     private lateinit var shapeRenderer: ShapeRenderer
-    private lateinit var polygon1: Polygon
+    private lateinit var anomaly: Polygon
     private lateinit var player: Polygon
     private lateinit var font: BitmapFont
     private lateinit var batch: SpriteBatch
@@ -37,7 +37,7 @@ class Main : ApplicationAdapter() {
     }
 
     private fun createAnomaly(x: Float, y: Float) {
-        polygon1 = Polygon(
+        anomaly = Polygon(
             floatArrayOf(
                 0f, 0f,
                 100f, 0f,
@@ -45,8 +45,8 @@ class Main : ApplicationAdapter() {
                 0f, 100f
             )
         )
-        polygon1.setOrigin(50f, 50f)
-        polygon1.setPosition(x - 50f, y - 50f)
+        anomaly.setOrigin(50f, 50f)
+        anomaly.setPosition(x - 50f, y - 50f)
     }
 
     private fun updatePlayer(deltaTime: Float) {
@@ -76,6 +76,10 @@ class Main : ApplicationAdapter() {
         x += velocity.x * speed * deltaTime
         y += velocity.y * speed * deltaTime
         player.setPosition(x, y)
+    }
+
+    private fun updateAnomaly(deltaTime: Float) {
+        anomaly.rotation += 90f * deltaTime
     }
 
     override fun create() {
@@ -126,16 +130,13 @@ class Main : ApplicationAdapter() {
 
         shapeRenderer.end()
 
-        // Rotate polygon1
-        polygon1.rotation += 90f * deltaTime
-
+        updateAnomaly(deltaTime)
         updatePlayer(deltaTime)
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
 
-        // Render polygons
         shapeRenderer.color = Color.GRAY
-        shapeRenderer.polygon(polygon1.transformedVertices)
+        shapeRenderer.polygon(anomaly.transformedVertices)
 
         shapeRenderer.color = Color.GRAY
         shapeRenderer.polygon(player.transformedVertices)
