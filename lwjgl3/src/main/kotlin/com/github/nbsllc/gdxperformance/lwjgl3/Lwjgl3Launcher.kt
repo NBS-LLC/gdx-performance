@@ -30,7 +30,7 @@ fun main() {
         if (selectedMode != null) {
             setFullscreenMode(selectedMode)
         } else {
-            setWindowedMode(1920, 1080)
+            setWindowedMode(1280, 720)
         }
         setWindowIcon(*(arrayOf(128, 64, 32, 16).map { "libgdx$it.png" }.toTypedArray()))
     })

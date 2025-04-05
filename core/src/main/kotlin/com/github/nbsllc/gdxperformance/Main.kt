@@ -11,10 +11,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Polygon
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ScreenUtils
+import com.badlogic.gdx.utils.viewport.ExtendViewport
+import com.badlogic.gdx.utils.viewport.Viewport
 
 class Main : ApplicationAdapter() {
 
     private lateinit var camera: OrthographicCamera
+    private lateinit var viewport: Viewport
     private lateinit var shapeRenderer: ShapeRenderer
     private lateinit var polygon1: Polygon
     private lateinit var player: Polygon
@@ -76,12 +79,15 @@ class Main : ApplicationAdapter() {
     }
 
     override fun create() {
-        val width = Gdx.graphics.width
-        val height = Gdx.graphics.height
+        val width = 1000f
+        val height = 1000f
 
-        camera = OrthographicCamera(width.toFloat(), height.toFloat())
-        camera.position.set(width / 2f, height / 2f, 0f)
+        camera = OrthographicCamera()
+        camera.setToOrtho(false, width, height)
+        camera.position.set(0f, 0f, 0f)
         camera.update()
+
+        viewport = ExtendViewport(width, height, camera)
 
         shapeRenderer = ShapeRenderer()
 
@@ -99,11 +105,14 @@ class Main : ApplicationAdapter() {
 
         val deltaTime = Gdx.graphics.deltaTime
 
-        // Gradient background
-        val width = Gdx.graphics.width.toFloat()
-        val height = Gdx.graphics.height.toFloat()
-
         ScreenUtils.clear(0f, 0f, 0f, 1f, true)
+
+        camera.update()
+        viewport.apply()
+
+        // Gradient background
+        val width = viewport.worldWidth
+        val height = viewport.worldHeight
 
         shapeRenderer.projectionMatrix = camera.combined
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
@@ -137,15 +146,12 @@ class Main : ApplicationAdapter() {
         batch.projectionMatrix = camera.combined
         batch.begin()
         font.draw(batch, "FPS: ${Gdx.graphics.framesPerSecond}", 10f, height - 10f)
+        font.draw(batch, "Resolution: ${Gdx.graphics.width}x${Gdx.graphics.height}", 10f, height - 30f)
         batch.end()
     }
 
     override fun resize(width: Int, height: Int) {
-        // Update your camera and other rendering-related variables here
-        camera.viewportWidth = width.toFloat()
-        camera.viewportHeight = height.toFloat()
-        camera.position.set(width / 2f, height / 2f, 0f)
-        camera.update()
+        viewport.update(width, height, true)
     }
 
     override fun dispose() {
